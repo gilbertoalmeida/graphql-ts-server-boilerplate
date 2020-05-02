@@ -1,10 +1,20 @@
 import { request } from "graphql-request";
-import { createConnection } from "typeorm";
-
 import { host } from "./constants";
 import { User } from "../entity/User";
+import { createTypeormConnection } from "../Utils/createTypeormConnection";
+import { Connection } from "typeorm";
 
-const email = "testuser3@test.com";
+let connection: Connection;
+
+/* helper function from jest. Runs before all test. There's also one
+afterAll, beforeEach and afterEach */
+beforeAll(async () => {
+  connection = await createTypeormConnection();
+  /* the database is being called empty in this test environment, bc
+  its ormconfig has a dropSchema set to true */
+});
+
+const email = "testuser@test.com";
 const password = "jalksdf";
 
 const mutation = `
@@ -20,14 +30,15 @@ test("Register user", async () => {
   /* test part */
 
   expect(response).toEqual({ register: true });
-  const connection = await createConnection();
   const users = await User.find({ where: { email } });
   expect(users).toHaveLength(1);
   const user = users[0];
   expect(user.email).toEqual(email);
   expect(user.password).not.toEqual(password);
+});
 
-  connection.close();
+afterAll(async () => {
+  await connection.close();
 });
 
 /* ADD A TEST TO DELETE THIS TEST USER */
