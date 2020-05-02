@@ -1,6 +1,28 @@
-import { IResolvers } from "graphql-tools";
+import * as yup from "yup";
 import * as bcrypt from "bcryptjs";
+import { IResolvers } from "graphql-tools";
 import { User } from "../../entity/User";
+import { formatYuperror } from "../../Utils/formatYupError";
+import {
+  duplicateEmail,
+  emailNotLongEnough,
+  emailNotValid,
+  passwordNotLongEnough
+} from "./errorMessages";
+
+/* field validation 
+second parenthesis is custom message*/
+const registerSchema = yup.object().shape({
+  email: yup
+    .string()
+    .min(3, emailNotLongEnough)
+    .max(255)
+    .email(emailNotValid),
+  password: yup
+    .string()
+    .min(3, passwordNotLongEnough)
+    .max(255)
+});
 
 /* IResolvers is getting types to ad. For the _ , for example */
 export const resolvers: IResolvers = {
@@ -13,10 +35,17 @@ export const resolvers: IResolvers = {
     /* This GQL.I... thing are the types of the object. The object is in the schema
     And we get the types through the library gql2ts. Run the script in package.json
     and it creates a file with the types inside the types folder */
-    register: async (
-      _,
-      { email, password }: GQL.IRegisterOnMutationArguments
-    ) => {
+    register: async (_, args: GQL.IRegisterOnMutationArguments) => {
+      /* validation of the argument fields */
+      try {
+        await registerSchema.validate(args, { abortEarly: false });
+        /* abortEarly avoids teh validation to stop on the first err
+        and shows all the errors */
+      } catch (err) {
+        return formatYuperror(err);
+      }
+
+      const { email, password } = args;
       /* check existing email */
       const userAlreadyExists = await User.findOne({
         where: { email },
@@ -26,7 +55,7 @@ export const resolvers: IResolvers = {
         return [
           {
             path: "email",
-            message: "already taken"
+            message: duplicateEmail
           }
         ];
       }
