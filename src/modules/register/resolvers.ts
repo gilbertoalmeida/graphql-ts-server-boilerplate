@@ -17,6 +17,20 @@ export const resolvers: IResolvers = {
       _,
       { email, password }: GQL.IRegisterOnMutationArguments
     ) => {
+      /* check existing email */
+      const userAlreadyExists = await User.findOne({
+        where: { email },
+        select: ["id"]
+      });
+      if (userAlreadyExists) {
+        return [
+          {
+            path: "email",
+            message: "already taken"
+          }
+        ];
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = User.create({
         email,
@@ -28,7 +42,7 @@ export const resolvers: IResolvers = {
       returns an object for the user, so you cannot do the same */
       await user.save();
 
-      return true;
+      return null;
     }
   }
 };

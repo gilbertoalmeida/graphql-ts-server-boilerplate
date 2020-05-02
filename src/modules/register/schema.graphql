@@ -1,7 +1,12 @@
+# import Error from "../../shared.graphql"
+
 type Query {
   bye: String
 }
 
 type Mutation {
-  register(email: String!, password: String!): Boolean
+  register(email: String!, password: String!): [Error!]
 }
+
+#the comment on the top is actually importing
+#Error from that file. It's sintax of graphql-import
