@@ -26,8 +26,7 @@
     "graphql-yoga": "^1.18.3",
     "pg": "^8.0.3",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "0.2.24",
-    "uuid": "^8.0.0"
+    "typeorm": "0.2.24"
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node --files src/index.ts",
