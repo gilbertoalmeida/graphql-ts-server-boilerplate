@@ -34,72 +34,78 @@ mutation {
 }
 `;
 
-test("Register user", async () => {
-  /* graphql-requests takes the host address of the server 
+describe("Register user", () => {
+  test("Registering one user", async () => {
+    /* graphql-requests takes the host address of the server 
   (which in test is different then in development, btw
     see index.ts) and the mutation or query that you 
     want to run*/
-  const response = await request(getHost, mutation(email, password));
+    const response = await request(getHost, mutation(email, password));
 
-  /* test part */
-  expect(response).toEqual({ register: null });
-  const users = await User.find({ where: { email } });
-  expect(users).toHaveLength(1);
-  const user = users[0];
-  expect(user.email).toEqual(email);
-  expect(user.password).not.toEqual(password);
-
-  /* now trying to register the same email again */
-  const response2: any = await request(getHost, mutation(email, password));
-  expect(response2.register).toHaveLength(1);
-  expect(response2.register[0]).toEqual({
-    path: "email",
-    message: duplicateEmail
+    /* test part */
+    expect(response).toEqual({ register: null });
+    const users = await User.find({ where: { email } });
+    expect(users).toHaveLength(1);
+    const user = users[0];
+    expect(user.email).toEqual(email);
+    expect(user.password).not.toEqual(password);
   });
 
-  /* catch short and not valid email */
-  const response3: any = await request(getHost, mutation("b", password));
-  expect(response3).toEqual({
-    register: [
-      {
-        path: "email",
-        message: emailNotLongEnough
-      },
-      {
-        path: "email",
-        message: emailNotValid
-      }
-    ]
+  test("Failing to register the same email", async () => {
+    const response2: any = await request(getHost, mutation(email, password));
+    expect(response2.register).toHaveLength(1);
+    expect(response2.register[0]).toEqual({
+      path: "email",
+      message: duplicateEmail
+    });
   });
 
-  /* catch bad password */
-  const response4: any = await request(getHost, mutation(email, "fd"));
-  expect(response4).toEqual({
-    register: [
-      {
-        path: "password",
-        message: passwordNotLongEnough
-      }
-    ]
+  test("Catch short and not valid email", async () => {
+    const response3: any = await request(getHost, mutation("b", password));
+    expect(response3).toEqual({
+      register: [
+        {
+          path: "email",
+          message: emailNotLongEnough
+        },
+        {
+          path: "email",
+          message: emailNotValid
+        }
+      ]
+    });
   });
 
-  /* catch bad password and bad email */
-  const response5: any = await request(getHost, mutation("bf", "gd"));
-  expect(response5).toEqual({
-    register: [
-      {
-        path: "email",
-        message: emailNotLongEnough
-      },
-      {
-        path: "email",
-        message: emailNotValid
-      },
-      {
-        path: "password",
-        message: passwordNotLongEnough
-      }
-    ]
+  test("Catch bad password", async () => {
+    const response4: any = await request(getHost, mutation(email, "fd"));
+    expect(response4).toEqual({
+      register: [
+        {
+          path: "password",
+          message: passwordNotLongEnough
+        }
+      ]
+    });
+  });
+
+  test("Catch bad password and bad email", async () => {
+    const response5: any = await request(getHost, mutation("bf", "gd"));
+    expect(response5).toEqual({
+      register: [
+        {
+          path: "email",
+          message: emailNotLongEnough
+        },
+        {
+          path: "email",
+          message: emailNotValid
+        },
+        {
+          path: "password",
+          message: passwordNotLongEnough
+        }
+      ]
+    });
   });
 });
 
