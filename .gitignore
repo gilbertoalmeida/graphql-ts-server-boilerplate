@@ -68,6 +68,9 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+#Redis dumps
+dump.rdb
+
 # dotenv environment variables file
 .env
 .env.test

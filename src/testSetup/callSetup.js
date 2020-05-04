@@ -10,7 +10,12 @@ require("ts-node/register");
 const { setup } = require("./setup");
 
 module.exports = async function() {
-  // Call your initialization methods here.
-  await setup();
+  /* if TEST_HOST was exits, it means that this function already
+  ran, so we won't run again (to not try to create the server
+    again) This is usefull when using --watch in the test script
+    to do only one test page*/
+  if (!process.env.TEST_HOST) {
+    await setup();
+  }
   return null;
 };

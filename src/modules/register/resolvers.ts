@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import * as bcrypt from "bcryptjs";
-import { IResolvers } from "graphql-tools";
 import { User } from "../../entity/User";
 import { formatYuperror } from "../../Utils/formatYupError";
 import {
@@ -10,6 +9,9 @@ import {
   passwordNotLongEnough
 } from "./errorMessages";
 import { createConfirmEmailLink } from "../../Utils/createConfirmEmailLink";
+import { ResolverMap } from "../../types/graphql-utils";
+import { GQL } from "../../types/schema";
+import { Context } from "graphql-yoga/dist/types";
 
 /* field validation 
 second parenthesis is custom message*/
@@ -26,7 +28,7 @@ const registerSchema = yup.object().shape({
 });
 
 /* IResolvers is getting types to ad. For the _ , for example */
-export const resolvers: IResolvers = {
+export const resolvers: ResolverMap = {
   /* just a dummy querry, bc graphql-tools was throwing an error when
   there was only a mutation */
   Query: {
@@ -35,12 +37,13 @@ export const resolvers: IResolvers = {
   Mutation: {
     /* This GQL.I... thing are the types of the object. The object is in the schema
     And we get the types through the library gql2ts. Run the script in package.json
-    and it creates a file with the types inside the types folder */
+    and it creates a file with the types inside the types folder, you need to export 
+    the namespace created inside, instead of just declaring */
     /* redis is in the context, see startServer */
     register: async (
       _,
       args: GQL.IRegisterOnMutationArguments,
-      { redis, url }
+      { redis, url }: Context
     ) => {
       /* validation of the argument fields */
       try {
