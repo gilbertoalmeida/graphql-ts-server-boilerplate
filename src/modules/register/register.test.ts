@@ -1,26 +1,12 @@
 import { request } from "graphql-request";
 import { User } from "../../entity/User";
-import { startServer } from "../../startServer";
-import { AddressInfo } from "net";
 import {
   duplicateEmail,
   emailNotLongEnough,
   emailNotValid,
   passwordNotLongEnough
 } from "./errorMessages";
-
-let getHost = "";
-
-/* helper function from jest. Runs before all test. There's also one
-afterAll, beforeEach and afterEach */
-beforeAll(async () => {
-  const app = await startServer();
-
-  /* AddressInfo is an interface for assigning types, see bottom of
-  this file for how it looks like */
-  const { port } = app.address() as AddressInfo;
-  getHost = `http://127.0.0.1:${port}`;
-});
+import { createTypeormConnection } from "../../Utils/createTypeormConnection";
 
 const email = "testuser@test.com";
 const password = "jalksdf";
@@ -34,13 +20,21 @@ mutation {
 }
 `;
 
+beforeAll(async () => {
+  await createTypeormConnection();
+});
+
 describe("Register user", () => {
   test("Registering one user", async () => {
-    /* graphql-requests takes the host address of the server 
-  (which in test is different then in development, btw
-    see index.ts) and the mutation or query that you 
-    want to run*/
-    const response = await request(getHost, mutation(email, password));
+    /* graphql-requests takes the host address of the server (this is comming from the setup funtion of the tests in
+      testSetup. The funstion runs before all test files). This host address is different in test then in development, btw
+    see index.ts)*/
+
+    /* using as string bc process.env things could be undefined, and we are trusting they won't */
+    const response = await request(
+      process.env.TEST_HOST as string,
+      mutation(email, password)
+    );
 
     /* test part */
     expect(response).toEqual({ register: null });
@@ -52,7 +46,10 @@ describe("Register user", () => {
   });
 
   test("Failing to register the same email", async () => {
-    const response2: any = await request(getHost, mutation(email, password));
+    const response2: any = await request(
+      process.env.TEST_HOST as string,
+      mutation(email, password)
+    );
     expect(response2.register).toHaveLength(1);
     expect(response2.register[0]).toEqual({
       path: "email",
@@ -61,7 +58,10 @@ describe("Register user", () => {
   });
 
   test("Catch short and not valid email", async () => {
-    const response3: any = await request(getHost, mutation("b", password));
+    const response3: any = await request(
+      process.env.TEST_HOST as string,
+      mutation("b", password)
+    );
     expect(response3).toEqual({
       register: [
         {
@@ -77,7 +77,10 @@ describe("Register user", () => {
   });
 
   test("Catch bad password", async () => {
-    const response4: any = await request(getHost, mutation(email, "fd"));
+    const response4: any = await request(
+      process.env.TEST_HOST as string,
+      mutation(email, "fd")
+    );
     expect(response4).toEqual({
       register: [
         {
@@ -89,7 +92,10 @@ describe("Register user", () => {
   });
 
   test("Catch bad password and bad email", async () => {
-    const response5: any = await request(getHost, mutation("bf", "gd"));
+    const response5: any = await request(
+      process.env.TEST_HOST as string,
+      mutation("bf", "gd")
+    );
     expect(response5).toEqual({
       register: [
         {

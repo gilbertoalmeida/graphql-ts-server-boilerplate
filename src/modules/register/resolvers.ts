@@ -9,6 +9,7 @@ import {
   emailNotValid,
   passwordNotLongEnough
 } from "./errorMessages";
+import { createConfirmEmailLink } from "../../Utils/createConfirmEmailLink";
 
 /* field validation 
 second parenthesis is custom message*/
@@ -35,7 +36,12 @@ export const resolvers: IResolvers = {
     /* This GQL.I... thing are the types of the object. The object is in the schema
     And we get the types through the library gql2ts. Run the script in package.json
     and it creates a file with the types inside the types folder */
-    register: async (_, args: GQL.IRegisterOnMutationArguments) => {
+    /* redis is in the context, see startServer */
+    register: async (
+      _,
+      args: GQL.IRegisterOnMutationArguments,
+      { redis, url }
+    ) => {
       /* validation of the argument fields */
       try {
         await registerSchema.validate(args, { abortEarly: false });
@@ -70,6 +76,8 @@ export const resolvers: IResolvers = {
       so you can use await here. If you do the same above at create, it just
       returns an object for the user, so you cannot do the same */
       await user.save();
+
+      await createConfirmEmailLink(url, user.id, redis);
 
       return null;
     }
