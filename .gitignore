@@ -68,9 +68,6 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-#Redis dumps
-dump.rdb
-
 # dotenv environment variables file
 .env
 .env.test
@@ -105,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+#Redis dumps
+dump.rdb
