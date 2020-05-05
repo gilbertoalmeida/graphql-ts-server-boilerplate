@@ -12,6 +12,7 @@ import { createConfirmEmailLink } from "../../Utils/createConfirmEmailLink";
 import { ResolverMap } from "../../types/graphql-utils";
 import { GQL } from "../../types/schema";
 import { Context } from "graphql-yoga/dist/types";
+import { sendEmail } from "../../Utils/sendEmail";
 
 /* field validation 
 second parenthesis is custom message*/
@@ -80,7 +81,15 @@ export const resolvers: ResolverMap = {
       returns an object for the user, so you cannot do the same */
       await user.save();
 
-      await createConfirmEmailLink(url, user.id, redis);
+      const confirmationLink = await createConfirmEmailLink(
+        url,
+        user.id,
+        redis
+      );
+
+      if (process.env.NODE_ENV !== "test") {
+        await sendEmail(email, confirmationLink);
+      }
 
       return null;
     }
