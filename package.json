@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@gql2ts/from-schema": "^2.0.0-4",
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "connect-redis": "^4.0.4",
     "dotenv": "^8.2.0",
@@ -50,12 +51,12 @@
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node --files src/index.ts",
     "test": "NODE_ENV=test TS_NODE_FILES=true jest --runInBand --forceExit",
-    "test-watch": "NODE_ENV=test TS_NODE_FILES=true jest --watch",
+    "test-watch": "NODE_ENV=test TS_NODE_FILES=true jest --runInBand --watch",
     "gen-schema-types": "ts-node src/scripts/createTypes.ts"
   },
   "jest": {
     "globalSetup": "./src/testSetup/callSetup.js",
-    "testEnvironment": "node",
+    "testURL": "http://localhost/",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },

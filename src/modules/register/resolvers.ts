@@ -1,5 +1,4 @@
 import * as yup from "yup";
-import * as bcrypt from "bcryptjs";
 import { User } from "../../entity/User";
 import { formatYuperror } from "../../Utils/formatYupError";
 import {
@@ -70,10 +69,11 @@ export const resolvers: ResolverMap = {
         ];
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+      /* the hashing of the password is now happening in the entity.
+      Typeworm is doing that before insert */
       const user = User.create({
         email,
-        password: hashedPassword
+        password
       });
 
       /* Hovering over this function you can see that it returns a Promisse,

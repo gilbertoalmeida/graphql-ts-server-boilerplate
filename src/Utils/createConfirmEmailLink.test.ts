@@ -3,19 +3,26 @@ import { createTypeormConnection } from "./createTypeormConnection";
 import { User } from "../entity/User";
 import * as Redis from "ioredis";
 import fetch from "node-fetch";
+import { Connection } from "typeorm";
 
 let userID: string;
 let confirmationURL: string;
 const redis = new Redis();
 
+let conn: Connection;
+
 beforeAll(async () => {
-  await createTypeormConnection();
+  conn = await createTypeormConnection();
   const user = await User.create({
     email: "testtest@test.com",
     password: "sdgaergae"
   }).save();
 
   userID = user.id;
+});
+
+afterAll(async () => {
+  conn.close();
 });
 
 describe("make sure createConfirmEmailLink works", () => {

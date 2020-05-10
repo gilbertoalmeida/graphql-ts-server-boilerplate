@@ -1,3 +1,5 @@
+import "reflect-metadata";
+import "dotenv/config";
 import { GraphQLServer } from "graphql-yoga";
 import * as session from "express-session";
 import * as connectRedis from "connect-redis";
@@ -31,19 +33,29 @@ export const startServer = async () => {
       }),
       name: "tl-id",
       secret: SESSION_SECRET,
-      resave: false, // doesn't resave the session everytime the server is hit with a request
-      saveUninitialized: false, // don't create a cookie for the user until we store some data on the session (login successful of login resolver)
+      resave: false,
+      saveUninitialized: false,
       cookie: {
-        httpOnly: true, // javascript cannot access the cookie
-        secure: process.env.NODE_ENV === "production", // will only send the cookie in https
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
       }
     })
   );
 
+  /* 
+  resave - // doesn't resave the session everytime the server is hit with a request
+  saveUninitialized - // don't create a cookie for the user until we store some data on the session (login successful of login resolver)
+  httpOnly - // javascript cannot access the cookie
+  secure - // will only send the cookie in https
+  */
+
   const cors = {
     credentials: true,
-    origin: process.env.FRONTEND_HOST as string
+    origin:
+      process.env.NODE_ENV === "test"
+        ? "*"
+        : (process.env.FRONTEND_HOST as string)
   };
 
   /* the confirmation email link route. It will fetch back the userId stored under the random id in redis*/
