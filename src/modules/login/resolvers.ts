@@ -58,7 +58,10 @@ export const resolvers: ResolverMap = {
         ];
       }
 
-      const validPassword = await bcrypt.compare(password, user.password);
+      let validPassword;
+      if (user.password) {
+        validPassword = await bcrypt.compare(password, user.password);
+      }
 
       if (!validPassword) {
         return errorResponse;

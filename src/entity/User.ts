@@ -14,11 +14,11 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column("varchar", { length: 255 })
-  email: string;
+  @Column("varchar", { length: 255, nullable: true })
+  email: string | null; // if registered through OAuth, there maybe won't be an email or a password
 
-  @Column("text")
-  password: string;
+  @Column("text", { nullable: true })
+  password: string | null;
 
   @Column("boolean", { default: false })
   confirmed: boolean;
@@ -26,8 +26,13 @@ export class User extends BaseEntity {
   @Column("boolean", { default: false })
   forgotPasswordLocked: boolean;
 
+  @Column("text", { nullable: true })
+  twitterId: string | null;
+
   @BeforeInsert()
   async hashPasswordBeforeInsert() {
-    this.password = await bcrypt.hash(this.password, 10);
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
   }
 }
