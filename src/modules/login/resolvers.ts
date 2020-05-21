@@ -3,6 +3,7 @@ import { User } from "../../entity/User";
 import { ResolverMap } from "../../types/graphql-utils";
 import { GQL } from "../../types/schema";
 import { invalidLogin, confirmEmailMessage } from "./errorMessages";
+import { userSessionIdPrefix } from "../../constants";
 
 const errorResponse = [
   {
@@ -27,7 +28,7 @@ export const resolvers: ResolverMap = {
     login: async (
       _,
       { email, password }: GQL.ILoginOnMutationArguments,
-      { session }
+      { session, redis, req }
     ) => {
       const user = await User.findOne({ where: { email } });
 
@@ -54,6 +55,17 @@ export const resolvers: ResolverMap = {
 
       session.userId = user.id;
       /* everytime the user does a request, we can look this variable to know their id */
+
+      /* storing the sessions in redis to be able to logout from all */
+      /* lpush creates an array and add an element or push an element to an 
+      array if it already exists. So we aredoing a key of the user.id and we are
+      pushing the session id to it */
+      /* adding a prefix bc we might want to use the user.id in redis in the future
+      and we don't wanna have the same key. So we are adding a prefix to all
+      keys that concerne this session storage */
+      if (req.sessionID) {
+        await redis.lpush(`${userSessionIdPrefix}${user.id}`, req.sessionID);
+      }
 
       return null;
     }

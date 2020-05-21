@@ -23,7 +23,26 @@ afterAll(async () => {
 });
 
 describe("logout", () => {
-  test("testing if a logged in user gets its session killed when loging out", async () => {
+  test("multiple sessions: same user is logged in in 2 devices and logged out from all sessions", async () => {
+    const client1 = new TestClient(process.env.TEST_HOST as string);
+    const client2 = new TestClient(process.env.TEST_HOST as string);
+
+    await client1.login(email, password);
+    await client2.login(email, password);
+
+    /* expect to be the same person, just logged in different
+    devices */
+    expect(await client1.me()).toEqual(await client2.me());
+
+    await client1.logout();
+
+    const responseLogout = await client1.me();
+    expect(responseLogout.data.me).toBeNull();
+
+    /* expect both to be null now*/
+    expect(await client1.me()).toEqual(await client2.me());
+  });
+  test("Single session: testing if a logged in user gets its session killed when loging out", async () => {
     const client = new TestClient(process.env.TEST_HOST as string);
 
     await client.login(email, password);

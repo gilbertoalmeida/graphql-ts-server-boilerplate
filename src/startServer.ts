@@ -9,6 +9,7 @@ import { createTypeormConnection } from "./Utils/createTypeormConnection";
 import { redis } from "./redis";
 import { confirmEmail } from "./routes/confirmEmail";
 import { generateSchema } from "./Utils/generateSchema";
+import { redisSessionPrefix } from "./constants";
 
 const SESSION_SECRET = "kuT6btB7G78G87Gg";
 const RedisStore = connectRedis(session);
@@ -22,14 +23,16 @@ export const startServer = async () => {
     context: ({ request }) => ({
       redis,
       url: request.protocol + "://" + request.get("host"),
-      session: request.session // so we can access the session object from every request for authentication
+      session: request.session, // so we can access the session object from every request for authentication
+      req: request /* whole request object, I wanna get the sessionID in the login */
     })
   });
 
   server.express.use(
     session({
       store: new RedisStore({
-        client: redis as any
+        client: redis as any,
+        prefix: redisSessionPrefix
       }),
       name: "tl-id",
       secret: SESSION_SECRET,
