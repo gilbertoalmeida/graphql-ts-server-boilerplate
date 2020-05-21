@@ -10,6 +10,8 @@ import { redis } from "./redis";
 import { confirmEmail } from "./routes/confirmEmail";
 import { generateSchema } from "./Utils/generateSchema";
 import { redisSessionPrefix } from "./constants";
+import * as rateLimit from "express-rate-limit";
+import * as RateLimitRedisStore from "rate-limit-redis";
 
 const SESSION_SECRET = "kuT6btB7G78G87Gg";
 const RedisStore = connectRedis(session);
@@ -27,6 +29,16 @@ export const startServer = async () => {
       req: request /* whole request object, I wanna get the sessionID in the login */
     })
   });
+
+  server.express.use(
+    rateLimit({
+      store: new RateLimitRedisStore({
+        client: redis
+      }),
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100 // limit each IP to 100 requests per windowMs
+    })
+  );
 
   server.express.use(
     session({
