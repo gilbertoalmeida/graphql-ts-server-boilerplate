@@ -36,6 +36,32 @@ const loginTryWithMessage = async (
 };
 
 describe("login", () => {
+  /* I unified the tests like Ben did, bc they were failing with errors that
+  didn't make any sense. For example having expects from one test on the other.
+  And I couldn't solve it (maybe it's a jest problem). If I want to look further
+  into this in the future, my divided tests are commented on the bottom */
+  test("email not found send back error", async () => {
+    const client = new TestClient(process.env.TEST_HOST as string);
+    await loginTryWithMessage(client, "bob@bob.com", "whatever", invalidLogin);
+  });
+
+  test("email not confirmed", async () => {
+    const client = new TestClient(process.env.TEST_HOST as string);
+    await client.register(email, password);
+
+    await loginTryWithMessage(client, email, password, confirmEmailMessage);
+
+    await User.update({ email }, { confirmed: true });
+
+    await loginTryWithMessage(client, email, "afthsdft5w4w45", invalidLogin);
+
+    const response = await client.login(email, password);
+
+    expect(response.data).toEqual({ login: null });
+  });
+});
+
+/* 
   test("massage for failed login due to email not in the database", async () => {
     const client = new TestClient(process.env.TEST_HOST as string);
 
@@ -66,5 +92,4 @@ describe("login", () => {
     expect(response.data).toEqual({
       login: null
     });
-  });
-});
+  }); */

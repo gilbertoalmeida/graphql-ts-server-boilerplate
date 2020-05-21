@@ -4,27 +4,24 @@ import { formatYuperror } from "../../Utils/formatYupError";
 import {
   duplicateEmail,
   emailNotLongEnough,
-  emailNotValid,
-  passwordNotLongEnough
+  emailNotValid
 } from "./errorMessages";
 import { createConfirmEmailLink } from "../../Utils/createConfirmEmailLink";
 import { ResolverMap } from "../../types/graphql-utils";
 import { GQL } from "../../types/schema";
 import { Context } from "graphql-yoga/dist/types";
 import { sendEmail } from "../../Utils/sendEmail";
+import { registerPasswordValidation } from "../../yupSchemas";
 
 /* field validation 
-second parenthesis is custom message*/
+second parameter is custom message*/
 const registerSchema = yup.object().shape({
   email: yup
     .string()
     .min(3, emailNotLongEnough)
     .max(255)
     .email(emailNotValid),
-  password: yup
-    .string()
-    .min(3, passwordNotLongEnough)
-    .max(255)
+  password: registerPasswordValidation
 });
 
 /* IResolvers is getting types to ad. For the _ , for example */
