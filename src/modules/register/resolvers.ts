@@ -6,12 +6,12 @@ import {
   emailNotLongEnough,
   emailNotValid
 } from "./errorMessages";
-import { createConfirmEmailLink } from "../../Utils/createConfirmEmailLink";
 import { ResolverMap } from "../../types/graphql-utils";
 import { GQL } from "../../types/schema";
 import { Context } from "graphql-yoga/dist/types";
 import { sendEmail } from "../../Utils/sendEmail";
 import { registerPasswordValidation } from "../../yupSchemas";
+import { createConfirmEmailLink } from "./createConfirmEmailLink";
 
 /* field validation 
 second parameter is custom message*/

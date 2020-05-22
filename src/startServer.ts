@@ -13,6 +13,8 @@ import * as RateLimitRedisStore from "rate-limit-redis";
 import * as passport from "passport";
 import { Strategy } from "passport-twitter";
 import { User } from "./entity/User";
+import { createTestConnection } from "./testUtils/createTestConnection";
+import { Connection } from "typeorm";
 
 const SESSION_SECRET = "kuT6btB7G78G87Gg";
 const RedisStore = connectRedis(session);
@@ -20,6 +22,11 @@ const RedisStore = connectRedis(session);
 /* The whole process of starting the server was transformed
 into an exported function to be called inside the tests */
 export const startServer = async () => {
+  if (process.env.NODE_ENV === "test") {
+    /* cleaning redis for an empty test */
+    await redis.flushall();
+  }
+
   const schemas = generateSchema();
   const server = new GraphQLServer({
     schema: schemas,
@@ -77,7 +84,10 @@ export const startServer = async () => {
   /* the confirmation email link route. It will fetch back the userId stored under the random id in redis*/
   server.express.get("/confirm/:id", confirmEmail);
 
-  const connection = await createTypeormConnection();
+  const connection: Connection =
+    process.env.NODE_ENV === "test"
+      ? await createTestConnection(true)
+      : await createTypeormConnection();
   /* If the node environment is test, the ormconfig has a dropSchema 
    set to true and the database drops(deletes everything inside)*/
 
