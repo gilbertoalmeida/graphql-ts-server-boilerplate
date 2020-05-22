@@ -1,9 +1,9 @@
 import { createConfirmEmailLink } from "./createConfirmEmailLink";
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 import * as Redis from "ioredis";
 import fetch from "node-fetch";
 import { Connection } from "typeorm";
-import { createTestConnection } from "../../testUtils/createTestConnection";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
 
 let userID: string;
 let confirmationURL: string;

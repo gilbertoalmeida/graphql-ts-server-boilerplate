@@ -1,13 +1,13 @@
 import * as bcrypt from "bcryptjs";
-import { User } from "../../entity/User";
-import { ResolverMap } from "../../types/graphql-utils";
-import { GQL } from "../../types/schema";
+import { User } from "../../../entity/User";
+import { ResolverMap } from "../../../types/graphql-utils";
+import { GQL } from "../../../types/schema";
 import {
   invalidLogin,
   confirmEmailMessage,
   forgotPasswordLockedError
 } from "./errorMessages";
-import { userSessionIdPrefix } from "../../constants";
+import { userSessionIdPrefix } from "../../../constants";
 
 const errorResponse = [
   {
@@ -18,11 +18,6 @@ const errorResponse = [
 
 /* IResolvers is getting types to ad. For the _ , for example */
 export const resolvers: ResolverMap = {
-  /* just a dummy querry, bc graphql-tools was throwing an error when
-  there was only a mutation */
-  Query: {
-    bye2: () => "bye"
-  },
   Mutation: {
     /* This GQL.I... thing are the types of the object. The object is in the schema
     And we get the types through the library gql2ts. Run the script in package.json

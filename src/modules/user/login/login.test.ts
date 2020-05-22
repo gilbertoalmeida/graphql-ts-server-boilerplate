@@ -1,8 +1,8 @@
 import { invalidLogin, confirmEmailMessage } from "./errorMessages";
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 import { Connection } from "typeorm";
-import { TestClient } from "../../Utils/TestClient";
-import { createTestConnection } from "../../testUtils/createTestConnection";
+import { TestClient } from "../../../Utils/TestClient";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
 
 const email = "login@test.com";
 const password = "jalksdf";

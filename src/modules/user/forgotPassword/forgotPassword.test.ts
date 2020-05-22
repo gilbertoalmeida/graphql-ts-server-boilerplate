@@ -1,13 +1,13 @@
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 import { Connection } from "typeorm";
-import { TestClient } from "../../Utils/TestClient";
-import { createForgotPasswordLink } from "../../Utils/createForgotPasswordLink";
+import { TestClient } from "../../../Utils/TestClient";
+import { createForgotPasswordLink } from "../../../Utils/createForgotPasswordLink";
 import * as Redis from "ioredis";
-import { forgotPasswordLockAccount } from "../../Utils/forgotPasswordLockAccount";
+import { forgotPasswordLockAccount } from "../../../Utils/forgotPasswordLockAccount";
 import { forgotPasswordLockedError } from "../login/errorMessages";
 import { passwordNotLongEnough } from "../register/errorMessages";
 import { expiredChangePasswordKeyError } from "./errorMessages";
-import { createTestConnection } from "../../testUtils/createTestConnection";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
 
 let userId: string;
 let conn: Connection;

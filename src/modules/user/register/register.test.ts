@@ -1,4 +1,4 @@
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 import {
   duplicateEmail,
   emailNotLongEnough,
@@ -6,8 +6,8 @@ import {
   passwordNotLongEnough
 } from "./errorMessages";
 import { Connection } from "typeorm";
-import { TestClient } from "../../Utils/TestClient";
-import { createTestConnection } from "../../testUtils/createTestConnection";
+import { TestClient } from "../../../Utils/TestClient";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
 
 const email = "register@test.com";
 const password = "jalksdf";
