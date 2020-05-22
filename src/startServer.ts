@@ -44,7 +44,7 @@ export const startServer = async () => {
         client: redis
       }),
       windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100 // limit each IP to 100 requests per windowMs
+      max: process.env.NODE_ENV === "test" ? 0 : 100 // limit each IP to 100 requests per windowMs (when not in testing)
     })
   );
 
