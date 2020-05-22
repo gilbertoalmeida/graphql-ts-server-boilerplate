@@ -1,7 +1,7 @@
-import { createTypeormConnection } from "../../Utils/createTypeormConnection";
-import { User } from "../../entity/User";
+import { createTypeormConnection } from "../../../Utils/createTypeormConnection";
+import { User } from "../../../entity/User";
 import { Connection } from "typeorm";
-import { TestClient } from "../../Utils/TestClient";
+import { TestClient } from "../../../Utils/TestClient";
 
 let userId: string;
 let conn: Connection;

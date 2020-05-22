@@ -1,13 +1,13 @@
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 import {
   duplicateEmail,
   emailNotLongEnough,
   emailNotValid,
   passwordNotLongEnough
 } from "./errorMessages";
-import { createTypeormConnection } from "../../Utils/createTypeormConnection";
+import { createTypeormConnection } from "../../../Utils/createTypeormConnection";
 import { Connection } from "typeorm";
-import { TestClient } from "../../Utils/TestClient";
+import { TestClient } from "../../../Utils/TestClient";
 
 const email = "testuser@test.com";
 const password = "jalksdf";

@@ -1,17 +1,17 @@
 import * as yup from "yup";
 import * as bcrypt from "bcryptjs";
-import { ResolverMap } from "../../types/graphql-utils";
-import { GQL } from "../../types/schema";
-import { forgotPasswordLockAccount } from "../../Utils/forgotPasswordLockAccount";
-import { createForgotPasswordLink } from "../../Utils/createForgotPasswordLink";
-import { User } from "../../entity/User";
+import { ResolverMap } from "../../../types/graphql-utils";
+import { GQL } from "../../../types/schema";
+import { forgotPasswordLockAccount } from "../../../Utils/forgotPasswordLockAccount";
+import { createForgotPasswordLink } from "../../../Utils/createForgotPasswordLink";
+import { User } from "../../../entity/User";
 import {
   userNotFoundError,
   expiredChangePasswordKeyError
 } from "./errorMessages";
-import { forgotPasswordPrefix } from "../../constants";
-import { registerPasswordValidation } from "../../yupSchemas";
-import { formatYuperror } from "../../Utils/formatYupError";
+import { forgotPasswordPrefix } from "../../../constants";
+import { registerPasswordValidation } from "../../../yupSchemas";
+import { formatYuperror } from "../../../Utils/formatYupError";
 
 /* field validation 
 second parameter is custom message*/
@@ -21,11 +21,6 @@ const forgotPasswordSchema = yup.object().shape({
 
 /* IResolvers is getting types to ad. For the _ , for example */
 export const resolvers: ResolverMap = {
-  /* just a dummy querry, bc graphql-tools was throwing an error when
-  there was only a mutation */
-  Query: {
-    dummy2: () => "bye"
-  },
   Mutation: {
     sendForgotPasswordEmail: async (
       _,
