@@ -1,4 +1,3 @@
-import { createTypeormConnection } from "../../../Utils/createTypeormConnection";
 import { User } from "../../../entity/User";
 import { Connection } from "typeorm";
 import { TestClient } from "../../../Utils/TestClient";
@@ -8,16 +7,17 @@ import { forgotPasswordLockAccount } from "../../../Utils/forgotPasswordLockAcco
 import { forgotPasswordLockedError } from "../login/errorMessages";
 import { passwordNotLongEnough } from "../register/errorMessages";
 import { expiredChangePasswordKeyError } from "./errorMessages";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
 
 let userId: string;
 let conn: Connection;
 const redis = new Redis();
-const email = "testtest@test.com";
+const email = "forgotpassword@test.com";
 const password = "asga346t3";
 const newPassword = "wrthsdb2346sd";
 
 beforeAll(async () => {
-  conn = await createTypeormConnection();
+  conn = await createTestConnection();
   const user = await User.create({
     email,
     password,

@@ -6,7 +6,7 @@ import {
   emailNotLongEnough,
   emailNotValid
 } from "./errorMessages";
-import { createConfirmEmailLink } from "../../../Utils/createConfirmEmailLink";
+import { createConfirmEmailLink } from "./createConfirmEmailLink";
 import { ResolverMap } from "../../../types/graphql-utils";
 import { GQL } from "../../../types/schema";
 import { Context } from "graphql-yoga/dist/types";

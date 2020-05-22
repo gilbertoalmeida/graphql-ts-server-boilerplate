@@ -1,15 +1,15 @@
-import { createTypeormConnection } from "../../../Utils/createTypeormConnection";
 import { User } from "../../../entity/User";
 import { Connection } from "typeorm";
 import { TestClient } from "../../../Utils/TestClient";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
 
 let userId: string;
 let conn: Connection;
-const email = "testtest@test.com";
+const email = "me@test.com";
 const password = "asga346t3";
 
 beforeAll(async () => {
-  conn = await createTypeormConnection();
+  conn = await createTestConnection();
   const user = await User.create({
     email,
     password,

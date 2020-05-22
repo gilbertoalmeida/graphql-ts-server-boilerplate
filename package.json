@@ -62,12 +62,12 @@
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node --files src/index.ts",
-    "test": "NODE_ENV=test TS_NODE_FILES=true jest --runInBand",
-    "test-watch": "NODE_ENV=test TS_NODE_FILES=true jest --runInBand --watch",
+    "test": "NODE_ENV=test TS_NODE_FILES=true jest",
+    "test-watch": "NODE_ENV=test TS_NODE_FILES=true jest --watch",
     "gen-schema-types": "ts-node src/scripts/createTypes.ts"
   },
   "jest": {
-    "globalSetup": "./src/testSetup/callSetup.js",
+    "globalSetup": "./src/testUtils/callSetup.js",
     "testURL": "http://localhost/",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
