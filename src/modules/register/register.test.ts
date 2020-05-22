@@ -9,7 +9,7 @@ import { Connection } from "typeorm";
 import { TestClient } from "../../Utils/TestClient";
 import { createTestConnection } from "../../testUtils/createTestConnection";
 
-const email = "testuser@test.com";
+const email = "register@test.com";
 const password = "jalksdf";
 
 let conn: Connection;

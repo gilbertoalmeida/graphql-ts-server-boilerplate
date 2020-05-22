@@ -14,7 +14,7 @@ let conn: Connection;
 beforeAll(async () => {
   conn = await createTestConnection();
   const user = await User.create({
-    email: "testtest@test.com",
+    email: "confemaillink@test.com",
     password: "sdgaergae"
   }).save();
 

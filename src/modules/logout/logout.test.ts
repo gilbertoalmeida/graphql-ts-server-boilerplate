@@ -5,7 +5,7 @@ import { createTestConnection } from "../../testUtils/createTestConnection";
 
 let userId: string;
 let conn: Connection;
-const email = "testtest@test.com";
+const email = "logout@test.com";
 const password = "asga346t3";
 
 beforeAll(async () => {

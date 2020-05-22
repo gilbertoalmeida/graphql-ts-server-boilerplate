@@ -12,7 +12,7 @@ import { createTestConnection } from "../../testUtils/createTestConnection";
 let userId: string;
 let conn: Connection;
 const redis = new Redis();
-const email = "testtest@test.com";
+const email = "forgotpassword@test.com";
 const password = "asga346t3";
 const newPassword = "wrthsdb2346sd";
 
