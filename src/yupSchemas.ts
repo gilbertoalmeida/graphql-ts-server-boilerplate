@@ -4,4 +4,5 @@ import { passwordNotLongEnough } from "./modules/user/register/errorMessages";
 export const registerPasswordValidation = yup
   .string()
   .min(3, passwordNotLongEnough)
-  .max(255);
+  .max(255)
+  .required();
